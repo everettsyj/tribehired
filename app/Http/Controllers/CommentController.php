@@ -25,14 +25,20 @@ class CommentController extends Controller
         if($request->has('id')){
             $comments->where('id','LIKE',"%$request->id%");
         }
-        if($request->has('name')){
+        elseif($request->has('post_id')){
+            $comments->where('post_id','LIKE',"%$request->post_id%");
+        }
+        elseif($request->has('name')){
             $comments->where('name','LIKE',"%$request->name%");
         }
-        if($request->has('email')){
+        elseif($request->has('email')){
             $comments->where('email','LIKE',"%$request->email%");
         }
-        if($request->has('body')){
+        elseif($request->has('body')){
             $comments->where('body','LIKE',"%$request->body%");
+        }
+        else{
+            return response()->json(['Search Parameter not valid']);
         }
         return response()->json($comments->get());
 
