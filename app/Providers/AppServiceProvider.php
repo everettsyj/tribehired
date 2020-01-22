@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('FetchPosts', \App\Data\FetchPosts::class);
+        $this->app->bind('FetchComments', \App\Data\FetchComments::class);
     }
 
     /**

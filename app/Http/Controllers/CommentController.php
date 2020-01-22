@@ -4,38 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Comment;
+use App\Data;
+use App\Http\Resources\CommentCollection;
 use App\Post;
+use App\Data\FetchComments;
 use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
     public function index()
     {
-        return Comment::all();
+        return CommentCollection::collection(Comment::all());
     }
 
-    public function filterComment(Request $request){
-        $search = $request->get('q');
-        $comments = Comment::where('post_id','like','%'.$search.'%')
-                    ->orWhere('id','LIKE',"%$search%")
-                    ->orWhere('name','LIKE',"%$search%")
-                    ->orWhere('email','LIKE',"%$search%")
-                    ->orWhere('body','LIKE',"%$search%")
-                    ->orderBy('id')
-                    ->get();
+    public function filterComment(Request $request)
+    {
+        app()->make('FetchComments')->getComments();
+        $comments = Comment::where('body','!=','null');
 
-        foreach($comments as $comment){
-            $result[] =[
-                'id' => $comment['id'],
-                'post_id' => $comment['post_id'],
-                'name' => $comment['name'],
-                'email' => $comment['email'],
-                'body' => $comment['body']
-                ];
-            }
-            return response()->json($result);
+        if($request->has('id')){
+            $comments->where('id','LIKE',"%$request->id%");
         }
+        if($request->has('name')){
+            $comments->where('name','LIKE',"%$request->name%");
+        }
+        if($request->has('email')){
+            $comments->where('email','LIKE',"%$request->email%");
+        }
+        if($request->has('body')){
+            $comments->where('body','LIKE',"%$request->body%");
+        }
+        return response()->json($comments->get());
+
+    }
 
 }
-
-

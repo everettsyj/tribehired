@@ -2,109 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Data;
+use App\Data\FetchComments;
+use App\Data\FetchPosts;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Http\Resources\PostCollection;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Post::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $data = new Post();
-        $data->name=$request->get('name');
-        $data->save();
-        return response()->json('Successfully added');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return PostCollection::collection(Post::all());
     }
 
     public function mostComment()
     {
-        $posts = Post::all();
-        foreach($posts as $post){
-            $comments[] = [
-            'id' => $post->id,
-            'post_title' => $post->title,
-            'post_body' => $post->body,
-            'count' => $post->comments->count()
-            ];
-        }
-
-        $topPost = max($comments);
-
+        app()->make('FetchPosts')->getPosts();
+        $topPost = Post::withCount('comments')
+        ->orderBy('comments_count','desc')
+        ->first();
         return response()->json([
-            'post_id' => $topPost['id'],
-            'post_title' => $topPost['post_title'],
-            'post_body' => $topPost['post_body'],
-            'total_number_of_comments' => $topPost['count']
+            'post_id' => $topPost->id,
+            'post_title' => $topPost->title,
+            'post_body' => $topPost->body,
+            'total_number_of_comments' => $topPost->comments_count
             ]
         );
     }

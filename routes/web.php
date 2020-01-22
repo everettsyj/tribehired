@@ -15,13 +15,3 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/getposts','DataController@getPosts');
-Route::get('/getcomments','DataController@getComments');
-
-Route::resource('post', 'PostController');
-Route::get('/mostcomment', 'PostController@mostComment');
-
-
-Route::resource('comment', 'CommentController');
-Route::get('search','CommentController@filterComment');
-

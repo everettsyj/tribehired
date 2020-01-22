@@ -9,116 +9,40 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 
 class DataController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    // public function dataCurl($url){
+    //     $client = new GuzzleHttpClient();
+    //     $response = $client->request('GET', $url);
+    //     $body = $response->getBody()->getContents();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    //     return $body;
+    // }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    // public function getPosts(){
+    //     $body = $this->dataCurl('https://jsonplaceholder.typicode.com/posts');
+    //     $posts = json_decode($body);
+    //     foreach($posts as $post){
+    //         Post::firstOrCreate([
+    //             'id' => $post->id,
+    //             'user_id' => $post->userId,
+    //             'title' => $post->title,
+    //             'body' => $post->body,
+    //         ]);
+    //     }
+    //     return redirect('api/post');
+    // }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function getPosts(){
-        $client = new GuzzleHttpClient();
-        $response = $client->request('GET', 'https://jsonplaceholder.typicode.com/posts');
-    	$statusCode = $response->getStatusCode();
-        $body = $response->getBody()->getContents();
-
-        $posts = json_decode($body, true);
-        foreach($posts as $post){
-            Post::create([
-                'id' => $post['id'],
-                'user_id' => $post['userId'],
-                'title' => $post['title'],
-                'body' => $post['body'],
-            ]);
-        }
-        return $posts;
-    }
-
-    public function getComments(){
-        $client = new GuzzleHttpClient();
-        $response = $client->request('GET', 'https://jsonplaceholder.typicode.com/comments');
-    	$statusCode = $response->getStatusCode();
-        $body = $response->getBody()->getContents();
-
-        $comments = json_decode($body, true);
-        foreach($comments as $comment){
-            Comment::create([
-                'id' => $comment['id'],
-                'post_id' => $comment['postId'],
-                'name' => $comment['name'],
-                'email' => $comment['email'],
-                'body' => $comment['body'],
-            ]);
-        }
-        return $comments;
-    }
+    // public function getComments(){
+    //     $body = $this->dataCurl('https://jsonplaceholder.typicode.com/comments');
+    //     $comments = json_decode($body);
+    //     foreach($comments as $comment){
+    //         Comment::firstOrCreate([
+    //             'id' => $comment->id,
+    //             'post_id' => $comment->postId,
+    //             'name' => $comment->name,
+    //             'email' => $comment->email,
+    //             'body' => $comment->body,
+    //         ]);
+    //     }
+    //     return redirect('api/comment');
+    // }
 }
